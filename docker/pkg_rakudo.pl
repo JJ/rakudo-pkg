@@ -93,12 +93,13 @@ sub build {
     }
     if ($os eq 'Alpine') {
         my $cmd = join(' ', @configure);
-        system('sh', '-c', "CFLAGS='-fPIC -DDL_USE_GLIBC_ITER_PHDR' $cmd") == 0
+        system('sh', '-c', "CFLAGS='-fPIC -DDL_USE_GLIBC_ITER_PHDR' $cmd && make") == 0
             or return 0;
     } else {
-        system(@configure) == 0 or return 0;
+      system(@configure) == 0 or return 0;
+      system('make')     == 0 or return 0;
     }
-    system('make')     == 0 or return 0;
+
     # make test
     if (!$skip_tests) {
         system('make', 'test') == 0 or return 0;
